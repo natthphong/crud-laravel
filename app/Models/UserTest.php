@@ -41,7 +41,28 @@ class UserTest extends Model
             ]
         );
     }
+    public static function test(): array
+    {
+        $results = DB::select('
+        SELECT id, name, email, password, age
+        FROM user_tests
+    ');
 
+        $users = [];
+        foreach ($results as $result) {
+
+            $user = new UserTest();
+            $user->id = $result->id;
+            $user->name = $result->name;
+            $user->email = $result->email;
+            $user->password = $result->password;
+            $user->age = $result->age;
+
+            $users[] = $user;
+        }
+
+        return $users;
+    }
     protected function casts(): array
     {
         return [
