@@ -20,4 +20,5 @@ Route::get('/users', [UserTestController::class, 'listUsers']);
 
 Route::middleware(['tokenAdmin'])->group(function () {
     Route::get('/auth', [UserProfileController::class,"generateOtp"]);
+    Route::get('/auth/email', [UserProfileController::class,"sendEmail"]);
 });
