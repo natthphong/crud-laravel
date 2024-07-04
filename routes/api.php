@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\UserTestController;
 use App\Models\UserTest;
 use Illuminate\Http\Request;
@@ -16,3 +17,7 @@ Route::post("/", function (Request $request){
 Route::post('/register', [UserTestController::class, 'register']);
 Route::post('/login', [UserTestController::class, 'login']);
 Route::get('/users', [UserTestController::class, 'listUsers']);
+
+Route::middleware(['tokenAdmin'])->group(function () {
+    Route::get('/auth', [UserProfileController::class,"generateOtp"]);
+});
