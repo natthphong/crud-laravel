@@ -3,16 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\UserTest;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
-use Illuminate\Http\JsonResponse;
-use Tymon\JWTAuth\Facades\JWTAuth;
-use Tymon\JWTAuth\Http\Parser\Parser;
 use Tymon\JWTAuth\JWT;
-use Tymon\JWTAuth\Manager;
 
 class UserTestController extends Controller
 {
@@ -83,17 +79,25 @@ class UserTestController extends Controller
                 'password' => 'required|string',
             ]);
             $user = User::query()->where('email', $request->email)->first();
-
+//
             if (! $user || ! Hash::check($request->password, $user->password)) {
                 throw ValidationException::withMessages([
                     'email' => ['The provided credentials are incorrect.'],
                 ]);
             }
 
-            $credentials = request(['email', 'password']);
-            if (! $token = auth()->attempt($credentials)) {
-                return response()->json(['error' => 'Unauthorized'], 401);
-            }
+//            $jwt = new JWT(app('tymon.jwt.manager'), app('tymon.jwt.parser'));
+            $payload = new User([
+                'name' => $user->name,
+                'email' => $user->email,
+                'password' => $user->password,
+//                'age' => $request->age,
+            ]);
+            $token  = $this->jwt->fromUser($payload);
+//            $credentials = request(['email', 'password']);
+//            if (! $token = auth()->attempt($credentials)) {
+//                return response()->json(['error' => 'Unauthorized'], 401);
+//            }
 
 
 //            $token = $this->jwt->fromSubject($userJwt);
